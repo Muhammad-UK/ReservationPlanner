@@ -1,4 +1,11 @@
-import { client, createTables, createCustomer } from "./db";
+import {
+  client,
+  createTables,
+  createCustomer,
+  createRestaurant,
+  fetchCustomers,
+  fetchRestaurants,
+} from "./db";
 
 const init = async () => {
   console.log("Connecting to database...");
@@ -8,12 +15,18 @@ const init = async () => {
   await createTables();
   console.log("Created tables successfully");
 
-  const [Alex, Bob, Alice, Joe] = await Promise.all([
-    createCustomer({ name: "Alex" }),
-    createCustomer({ name: "Bob" }),
-    createCustomer({ name: "Alice" }),
-    createCustomer({ name: "Joe" }),
-  ]);
+  const [Alex, Bob, Alice, Joe, RedLobster, OliveGarden, CheesecakeFactory] =
+    await Promise.all([
+      createCustomer({ name: "Alex" }),
+      createCustomer({ name: "Bob" }),
+      createCustomer({ name: "Alice" }),
+      createCustomer({ name: "Joe" }),
+      createRestaurant({ name: "RedLobster" }),
+      createRestaurant({ name: "OliveGarden" }),
+      createRestaurant({ name: "CheesecakeFactory" }),
+    ]);
+  console.log(await fetchCustomers());
+  console.log(await fetchRestaurants());
 };
 
 init();
