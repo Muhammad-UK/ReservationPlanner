@@ -17,7 +17,7 @@ export type Reservation = {
   restaurant_id: string;
 };
 export type ReservationParams = {
-  customer_id: string;
-  restaurant_id: string;
   reservation_date: Date;
+  restaurant_id: string;
+  customer_id: string;
 };
