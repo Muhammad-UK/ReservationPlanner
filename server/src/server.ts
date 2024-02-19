@@ -1,4 +1,4 @@
-import { client, createTables } from "./db.ts";
+import { client, createTables, createCustomer } from "./db";
 
 const init = async () => {
   console.log("Connecting to database...");
@@ -7,6 +7,13 @@ const init = async () => {
 
   await createTables();
   console.log("Created tables successfully");
+
+  const [Alex, Bob, Alice, Joe] = await Promise.all([
+    createCustomer({ name: "Alex" }),
+    createCustomer({ name: "Bob" }),
+    createCustomer({ name: "Alice" }),
+    createCustomer({ name: "Joe" }),
+  ]);
 };
 
 init();

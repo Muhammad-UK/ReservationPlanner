@@ -1,10 +1,13 @@
 import pg from "pg";
+import { v4 as uuidv4 } from "uuid"; // importing like this because I was getting some errors before and this is what the uuid documentation recommends
 
-const client = new pg.Client(
+import { Customer } from "./types";
+
+export const client = new pg.Client(
   process.env.DATABASE_URL || "postgres://localhost/acme_reservation_planner"
 );
 
-const createTables = async () => {
+export const createTables = async () => {
   const SQL = /*sql*/ `
         DROP TABLE IF EXISTS reservations;
         DROP TABLE IF EXISTS customers;
@@ -31,4 +34,12 @@ const createTables = async () => {
   await client.query(SQL);
 };
 
-export { client, createTables };
+export const createCustomer = async ({ name }): Promise<Customer> => {
+  const SQL = /*sql*/ `
+    INSERT INTO customers(id, name) 
+    VALUES($1, $2)
+    RETURNING *;
+  `;
+  const response = await client.query(SQL, [uuidv4(), name]);
+  return response.rows[0] as Customer;
+};
