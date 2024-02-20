@@ -1,3 +1,4 @@
+import express from "express";
 import {
   client,
   createTables,
@@ -8,6 +9,31 @@ import {
   createReservation,
   fetchReservations,
 } from "./db";
+
+const app = express();
+app.use(express.json());
+
+app.get("/api/customers", async (req, res, next) => {
+  try {
+    res.send(await fetchCustomers());
+  } catch (error) {
+    next(error);
+  }
+});
+app.get("/api/restaurants", async (req, res, next) => {
+  try {
+    res.send(await fetchRestaurants());
+  } catch (error) {
+    next(error);
+  }
+});
+app.get("/api/reservations", async (req, res, next) => {
+  try {
+    res.send(await fetchReservations());
+  } catch (error) {
+    next(error);
+  }
+});
 
 const init = async () => {
   console.log("Connecting to database...");
@@ -29,9 +55,6 @@ const init = async () => {
     createRestaurant({ name: "CheesecakeFactory" }),
   ]);
 
-  console.log(await fetchCustomers());
-  console.log(await fetchRestaurants());
-
   const [reservation1, reservation2] = await Promise.all([
     createReservation({
       reservation_date: new Date("2024-04-12"),
@@ -44,7 +67,9 @@ const init = async () => {
       customer_id: Joe.id,
     }),
   ]);
-  console.log(await fetchReservations());
+
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => console.log(`Listening on port ${port}`));
 };
 
 init();
