@@ -49,6 +49,15 @@ export const createCustomer = async ({ name }: Name): Promise<Customer> => {
   const response = await client.query(SQL, [uuidv4(), name]);
   return response.rows[0] as Customer;
 };
+export const createRestaurant = async ({ name }: Name): Promise<Restaurant> => {
+  const SQL = /*sql*/ `
+    INSERT INTO restaurants(id, name)
+    VALUES($1, $2)
+    RETURNING *;
+  `;
+  const response = await client.query(SQL, [uuidv4(), name]);
+  return response.rows[0] as Restaurant;
+};
 export const createReservation = async ({
   customer_id,
   restaurant_id,
@@ -68,14 +77,12 @@ export const createReservation = async ({
   return response.rows[0] as Reservation;
 };
 
-export const createRestaurant = async ({ name }: Name): Promise<Restaurant> => {
+export const deleteReservation = async (id: string, customer_id: string) => {
   const SQL = /*sql*/ `
-    INSERT INTO restaurants(id, name)
-    VALUES($1, $2)
-    RETURNING *;
+    DELETE FROM reservations
+    WHERE id = $1 AND customer_id = $2;
   `;
-  const response = await client.query(SQL, [uuidv4(), name]);
-  return response.rows[0] as Restaurant;
+  await client.query(SQL, [id, customer_id]);
 };
 
 export const fetchCustomers = async (): Promise<Customer[]> => {
@@ -86,7 +93,6 @@ export const fetchCustomers = async (): Promise<Customer[]> => {
   const response = await client.query(SQL);
   return response.rows as Customer[];
 };
-
 export const fetchRestaurants = async (): Promise<Restaurant[]> => {
   const SQL = /*sql*/ `
     SELECT *
@@ -95,7 +101,6 @@ export const fetchRestaurants = async (): Promise<Restaurant[]> => {
   const response = await client.query(SQL);
   return response.rows as Restaurant[];
 };
-
 export const fetchReservations = async (): Promise<Reservation[]> => {
   const SQL = /*sql*/ `
     SELECT * 

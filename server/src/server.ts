@@ -17,16 +17,18 @@ const init = async () => {
   await createTables();
   console.log("Created tables successfully");
 
-  const [Alex, Bob, Alice, Joe, RedLobster, OliveGarden, CheesecakeFactory] =
-    await Promise.all([
-      createCustomer({ name: "Alex" }),
-      createCustomer({ name: "Bob" }),
-      createCustomer({ name: "Alice" }),
-      createCustomer({ name: "Joe" }),
-      createRestaurant({ name: "RedLobster" }),
-      createRestaurant({ name: "OliveGarden" }),
-      createRestaurant({ name: "CheesecakeFactory" }),
-    ]);
+  const [Alex, Bob, Alice, Joe] = await Promise.all([
+    createCustomer({ name: "Alex" }),
+    createCustomer({ name: "Bob" }),
+    createCustomer({ name: "Alice" }),
+    createCustomer({ name: "Joe" }),
+  ]);
+  const [RedLobster, OliveGarden, CheesecakeFactory] = await Promise.all([
+    createRestaurant({ name: "RedLobster" }),
+    createRestaurant({ name: "OliveGarden" }),
+    createRestaurant({ name: "CheesecakeFactory" }),
+  ]);
+
   console.log(await fetchCustomers());
   console.log(await fetchRestaurants());
 
