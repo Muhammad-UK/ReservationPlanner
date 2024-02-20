@@ -48,6 +48,19 @@ app.delete(
   }
 );
 
+app.post("/api/customers/:customer_id/reservations", async (req, res, next) => {
+  try {
+    const response = await createReservation({
+      reservation_date: new Date(req.body.date),
+      restaurant_id: req.body.restaurant_id,
+      customer_id: req.params.customer_id,
+    });
+    res.status(201).send(response);
+  } catch (error) {
+    next(error);
+  }
+});
+
 const init = async () => {
   console.log("Connecting to database...");
   await client.connect();
@@ -68,7 +81,7 @@ const init = async () => {
     createRestaurant({ name: "CheesecakeFactory" }),
   ]);
 
-  const [reservation1, reservation2] = await Promise.all([
+  await Promise.all([
     createReservation({
       reservation_date: new Date("2024-04-12"),
       restaurant_id: RedLobster.id,
@@ -80,6 +93,11 @@ const init = async () => {
       customer_id: Joe.id,
     }),
   ]);
+  console.log("Data seeded");
+
+  console.log(await fetchCustomers());
+  console.log(await fetchRestaurants());
+  console.log(await fetchReservations());
 
   const port = process.env.PORT || 3000;
   app.listen(port, () => console.log(`Listening on port ${port}`));
