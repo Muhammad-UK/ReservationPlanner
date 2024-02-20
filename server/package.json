@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "bun:dev": "bun run --watch src/server.ts",
+    "start:dev": "tsx watch src/server.ts",
     "build": "tsc"
   },
   "keywords": [],
