@@ -1,4 +1,4 @@
-import express from "express";
+import express, { application } from "express";
 import {
   client,
   createTables,
@@ -8,6 +8,7 @@ import {
   fetchRestaurants,
   createReservation,
   fetchReservations,
+  deleteReservation,
 } from "./db";
 
 const app = express();
@@ -34,6 +35,18 @@ app.get("/api/reservations", async (req, res, next) => {
     next(error);
   }
 });
+
+app.delete(
+  "/api/customers/:customer_id/reservations/:id",
+  async (req, res, next) => {
+    try {
+      await deleteReservation(req.params.id, req.params.customer_id);
+      res.sendStatus(204);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 const init = async () => {
   console.log("Connecting to database...");

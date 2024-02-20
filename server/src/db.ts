@@ -1,6 +1,5 @@
 import pg from "pg";
 import { v4 as uuidv4 } from "uuid"; // importing like this because I was getting some errors before and this is what the uuid documentation recommends
-
 import {
   Customer,
   Name,
